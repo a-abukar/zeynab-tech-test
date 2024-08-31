@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management Interface</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #3498db;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #user-list, #status-message {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #ecf0f1;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li span {
+      font-weight: bold;
+      color: #34495e;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>User Management Interface</h1>
+  <button id="fetch-users">Fetch Users</button>
+  <button id="check-status">Check Status</button>
+
+  <div id="status-message"></div>
+  <div id="user-list"></div>
+
+  <script>
+    document.getElementById('fetch-users').addEventListener('click', function() {
+      fetch('/api/users')
+        .then(response => response.json())
+        .then(data => {
+          const userListDiv = document.getElementById('user-list');
+          userListDiv.innerHTML = '<h2>Users:</h2>';
+          const ul = document.createElement('ul');
+          data.forEach(user => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>${user.name}</span> <span>${user.email}</span>`;
+            ul.appendChild(li);
+          });
+          userListDiv.appendChild(ul);
+        })
+        .catch(error => {
+          console.error('Error fetching users:', error);
+        });
+    });
+
+    document.getElementById('check-status').addEventListener('click', function() {
+      fetch('/api/status')
+        .then(response => response.json())
+        .then(data => {
+          const statusMessageDiv = document.getElementById('status-message');
+          statusMessageDiv.innerHTML = `<h2>Status:</h2><p>${data.status}</p>`;
+        })
+        .catch(error => {
+          console.error('Error fetching status:', error);
+        });
+    });
+  </script>
+
+</body>
+</html>
